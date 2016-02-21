@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Velleman.Kits;
 
 namespace Velleman8090
 {
@@ -23,6 +25,13 @@ namespace Velleman8090
         public MainWindow()
         {
             InitializeComponent();
+
+            K8090Board board = new K8090Board(COM.GetPort());
+            board.Connect();
+            board.SwitchRelayOn(0x40);
+            Thread.Sleep(2000);
+            board.SwitchRelayOff(0x40);
+            board.Disconnect();
         }
     }
 }
