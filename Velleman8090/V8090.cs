@@ -31,7 +31,7 @@ namespace Velleman8090
 
         private void Reset()
         {
-            this.Send(() => this._board.SwitchRelayOn(0x0)); // switch off all
+            this.Send(() => this._board.SwitchRelayOff(0xFF)); // switch off all
         }
 
         private void Validate(int relay)
@@ -81,8 +81,10 @@ namespace Velleman8090
         public void On(int index)
         {
             this.Validate(index);
+            BitArray on = new BitArray(8);
+            on.Set(index, true);
+            this.Send(() => this._board.SwitchRelayOn(this.BitArrayToByte(on)));
             this._subrelays.Set(index, true);
-            this.Send(() => this._board.SwitchRelayOn(this.BitArrayToByte(this._subrelays)));
         }
 
         /// <summary>
@@ -92,8 +94,10 @@ namespace Velleman8090
         public void Off(int index)
         {
             this.Validate(index);
+            BitArray off = new BitArray(8);
+            off.Set(index, true);
+            this.Send(() => this._board.SwitchRelayOff(this.BitArrayToByte(off)));
             this._subrelays.Set(index, false);
-            this.Send(() => this._board.SwitchRelayOn(this.BitArrayToByte(this._subrelays)));
         }
 
         /// <summary>
@@ -103,8 +107,10 @@ namespace Velleman8090
         public void Toggle(int index)
         {
             this.Validate(index);
+            BitArray toggle = new BitArray(8);
+            toggle.Set(index, true);
+            this.Send(() => this._board.ToggleRelay(this.BitArrayToByte(toggle)));
             this._subrelays.Set(index, !this._subrelays.Get(index));
-            this.Send(() => this._board.SwitchRelayOn(this.BitArrayToByte(this._subrelays)));
         }
     }
 }
